@@ -1,6 +1,7 @@
 ---
 title: "Applied Statistical Programming - Spring 2022"
 output: pdf_document
+author: Alma Velazquez
 ---
 
 ```{r setup, include=FALSE}
@@ -44,5 +45,14 @@ For this problem set, you will not solve the Monty Hall Problem, but you will ha
 \end{enumerate}
 
 ```{r tidy=TRUE}
-# Code
+source("LetsMakeADeal.R")
+
+set.seed(444)
+
+almas_door <- choose_door(2)
+
+is_numbered(almas_door)
+
+PlayGame(almas_door)
+
 ```
