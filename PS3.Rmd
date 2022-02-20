@@ -82,11 +82,14 @@ test_door <- choose_door(3)
 # The player validates a door with the following function
 is_numbered <- function(door){
   
+  # Define new criteria based on class "door"
   criteria <- is.list(door) & is.integer(door$selected) & any(door$selected %in% c(1,2,3))
   
   if(criteria){
+    # Return original object if correct class
     return(door)
   } else {
+    # Otherwise raise this error
     stop("Error: please select a numbered door with choose_door() to proceed")
   }
 }
@@ -119,7 +122,8 @@ PlayGame <- function(door){
   # The winning door is chosen (from 1:3, randomly choose 1)
   winning_door <- sample(3,1)
   
-  # Determine the outcome with a logical test
+  # Determine the outcome with a logical test:
+  # Is the player's door equal to the winning door?
   outcome <- winning_door == door$selected
   
   # Use the logical test to deliver the appropriate message
@@ -147,12 +151,13 @@ PlayGame(test_door)
 
 ### Play full round of the game
 ```{r tidy=TRUE}
+# Set a seed so this player's results can be replicated
 set.seed(444)
 
+# I chose door 2
 almas_door <- choose_door(2)
 
-is_numbered(almas_door)
-
+# Had a lucky guess!
 PlayGame(almas_door)
 
 ```
