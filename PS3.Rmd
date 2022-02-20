@@ -5,7 +5,7 @@ author: Alma Velazquez
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, tidy = TRUE)
 ```
 
 \begin{center}
@@ -136,7 +136,16 @@ PlayGame <- function(door){
 
 \
 
-### Play a round of the game
+
+```{r}
+# Test PlayGame()
+PlayGame(test_door)
+```
+
+
+\
+
+### Play full round of the game
 ```{r tidy=TRUE}
 set.seed(444)
 
