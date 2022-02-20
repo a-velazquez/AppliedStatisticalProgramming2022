@@ -67,18 +67,52 @@ choose_door <- function(x){
 
 ```
 
+\
+
+```{r}
+## Test choose_door()
+test_door <- choose_door(3)
+```
+
+
+\
+
 ```{r}
 ## Function 2
 # The player validates a door with the following function
 is_numbered <- function(door){
-  if(is.integer(door$selected)){
+  
+  criteria <- is.list(door) & is.integer(door$selected) & any(door$selected %in% c(1,2,3))
+  
+  if(criteria){
     return(door)
   } else {
-    stop("Error: please select a door with choose_door() to proceed")
+    stop("Error: please select a numbered door with choose_door() to proceed")
   }
 }
 
 ```
+
+
+\
+
+
+```{r, eval=FALSE}
+## Test is_numbered()
+is_numbered(test_door)
+
+# bad_door <- list(2)
+
+# is.list(bad_door)
+# is.integer(bad_door$selected)
+# any(bad_door$selected %in% c(1,2,3))
+
+is_numbered(list(2))
+```
+
+
+\
+
 
 ```{r}
 ## Function 3
