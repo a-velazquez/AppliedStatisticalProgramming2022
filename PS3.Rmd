@@ -97,17 +97,12 @@ is_numbered <- function(door){
 \
 
 
-```{r, eval=FALSE}
+```{r}
 ## Test is_numbered()
 is_numbered(test_door)
 
-# bad_door <- list(2)
-
-# is.list(bad_door)
-# is.integer(bad_door$selected)
-# any(bad_door$selected %in% c(1,2,3))
-
-is_numbered(list(2))
+## Uncomment to test a bad door
+# is_numbered(list(2))
 ```
 
 
