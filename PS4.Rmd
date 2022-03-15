@@ -40,8 +40,42 @@ First, create two new objects \texttt{polls} and \texttt{Endorsements}. Then com
 \begin{itemize}
   \item Change the \texttt{Endorsements} variable name endorsee to \texttt{candidate\_name}.
   \item Change the \texttt{Endorsements} dataframe into a \texttt{tibble} object.
+  
+```{r}
+# Check whether Endorsements is already tibble - this should already be the case
+is_tibble(Endorsements)
+
+# Rename endorsee variable 
+Endorsements <- Endorsements %>% 
+  rename(candidate_name = endorsee)
+```
+  
+  
+
   \item Filter the \texttt{poll} variable to only include the following 6 candidates: Amy Klobuchar, Bernard Sanders,Elizabeth Warren, Joseph R. Biden Jr., Michael Bloomberg, Pete Buttigieg \textbf{and} subset the dataset to the following five variables: \texttt{candidate\_name, sample\_size, start\_date, party, pct}
-  \item Compare the candidate names in the two datasets and find instances where the a candidates name is spelled differently i.e. Bernard vs. Bernie. Using only \texttt{dplyr} functions, make these the same across datasets. 
+  
+```{r}
+names(polls)
+unique(polls$candidate_name)
+
+polls <- polls %>% 
+  filter(candidate_name %in% c("Amy Klobuchar", "Bernard Sanders",
+                               "Elizabeth Warren", "Joseph R. Biden Jr.", 
+                               "Michael Bloomberg", "Pete Buttigieg")) %>% 
+  select(candidate_name, sample_size, start_date, party, pct)
+
+unique(polls$candidate_name)
+
+```
+  
+  
+  \item Compare the candidate names in the two datasets and find instances where the a candidates name is spelled differently i.e. Bernard vs. Bernie. Using only \texttt{dplyr} functions, make these the same across datasets.
+  
+```{r}
+
+```
+  
+  
   \item Now combine the two datasets by candidate name using \texttt{dplyr} (there will only be five candidates after joining).
   \item Create a variable which indicates the number of endorsements for each of the five candidates using \texttt{dplyr}.
   \item Plot the number of endorsement each of the 5 candidates have using \texttt{ggplot()}. Save your plot as an object \texttt{p}.
