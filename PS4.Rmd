@@ -1,6 +1,7 @@
 ---
 title: "Applied Statistical Programming - Spring 2022"
 output: pdf_document
+author: Alma Velazquez
 ---
 
 ```{r setup, include=FALSE}
@@ -25,7 +26,7 @@ Due Wednesday, March 16, 10:00 AM (Before Class) \\
 
 Your task in this problem set is to combine two datasets in order to observe how many endorsements each candidate received using only \texttt{dplyr} functions. Use the same Presidential primary polls that were used for the in class worksheets on February 28 and March 2.
 
-```{r eval=FALSE}
+```{r, message=FALSE, output="hide", warning=FALSE}
 # Change eval=FALSE in the code block. Install packages as appropriate.
 #install.packages("fivethirtyeight")
 library(fivethirtyeight)
@@ -37,11 +38,12 @@ Endorsements <- endorsements_2020 # from the fiverthirtyeight package
 ```
 
 First, create two new objects \texttt{polls} and \texttt{Endorsements}. Then complete the following.
-\begin{itemize}
-  \item Change the \texttt{Endorsements} variable name endorsee to \texttt{candidate\_name}.
-  \item Change the \texttt{Endorsements} dataframe into a \texttt{tibble} object.
+
+* Change the \texttt{Endorsements} variable name endorsee to \texttt{candidate\_name}.
+* Change the \texttt{Endorsements} dataframe into a \texttt{tibble} object.
   
 ```{r}
+
 # Check whether Endorsements is already tibble - this should already be the case
 is_tibble(Endorsements)
 
@@ -52,43 +54,102 @@ Endorsements <- Endorsements %>%
   
   
 
-  \item Filter the \texttt{poll} variable to only include the following 6 candidates: Amy Klobuchar, Bernard Sanders,Elizabeth Warren, Joseph R. Biden Jr., Michael Bloomberg, Pete Buttigieg \textbf{and} subset the dataset to the following five variables: \texttt{candidate\_name, sample\_size, start\_date, party, pct}
+* Filter the \texttt{poll} variable to only include the following 6 candidates: Amy Klobuchar, Bernard Sanders,Elizabeth Warren, Joseph R. Biden Jr., Michael Bloomberg, Pete Buttigieg \textbf{and} subset the dataset to the following five variables: \texttt{candidate\_name, sample\_size, start\_date, party, pct}
   
 ```{r}
-names(polls)
-unique(polls$candidate_name)
-
 polls <- polls %>% 
   filter(candidate_name %in% c("Amy Klobuchar", "Bernard Sanders",
                                "Elizabeth Warren", "Joseph R. Biden Jr.", 
                                "Michael Bloomberg", "Pete Buttigieg")) %>% 
   select(candidate_name, sample_size, start_date, party, pct)
 
+# Check that it worked
 unique(polls$candidate_name)
 
 ```
   
   
-  \item Compare the candidate names in the two datasets and find instances where the a candidates name is spelled differently i.e. Bernard vs. Bernie. Using only \texttt{dplyr} functions, make these the same across datasets.
+* Compare the candidate names in the two datasets and find instances where the a candidates name is spelled differently i.e. Bernard vs. Bernie. Using only \texttt{dplyr} functions, make these the same across datasets.
   
 ```{r}
+unique(polls$candidate_name)
+unique(Endorsements$candidate_name)
+
+
+Endorsements <- Endorsements %>% 
+  mutate(candidate_name = case_when(
+    grepl("biden", candidate_name, ignore.case = TRUE) ~ "Joseph R. Biden Jr.",
+    grepl("sanders", candidate_name, ignore.case = TRUE) ~ "Bernard Sanders",
+    TRUE ~ candidate_name
+  ))
+
+  
+unique(Endorsements$candidate_name)
+```
+  
+  
+* Now combine the two datasets by candidate name using \texttt{dplyr} (there will only be five candidates after joining).
+  
+```{r}
+length(unique(polls$candidate_name))
+length(unique(Endorsements$candidate_name))
+
+
+polls <- polls %>% 
+  inner_join(Endorsements, by="candidate_name")
+
+length(unique(polls$candidate_name))
 
 ```
   
   
-  \item Now combine the two datasets by candidate name using \texttt{dplyr} (there will only be five candidates after joining).
-  \item Create a variable which indicates the number of endorsements for each of the five candidates using \texttt{dplyr}.
-  \item Plot the number of endorsement each of the 5 candidates have using \texttt{ggplot()}. Save your plot as an object \texttt{p}.
-  \item Rerun the previous line as follows: \texttt{p + theme\_dark()}. Notice how you can still customize your plot without rerunning the plot with new options.
-  \item Now, using the knowledge from the last step change the label of the X and Y axes to be more informative, add a title. Save the plot in your forked repository.
-\end{itemize}
+* Create a variable which indicates the number of endorsements for each of the five candidates using \texttt{dplyr}.
+  
+```{r}
+# Create standalone dataset with counts
+candidate_endorsements <- Endorsements %>% 
+  count(candidate_name) %>% 
+  rename(n_endorsements = n) %>% 
+  semi_join(polls, by="candidate_name")
+
+# Add counts to the merged dataset 
+polls <- polls %>% 
+  left_join(candidate_endorsements, by="candidate_name")
 
 
-\section*{Text-as-Data with \texttt{tidyverse}}
+```
+
+  
+  
+* Plot the number of endorsement each of the 5 candidates have using \texttt{ggplot()}. Save your plot as an object \texttt{p}.
+* Rerun the previous line as follows: \texttt{p + theme\_dark()}. Notice how you can still customize your plot without rerunning the plot with new options.
+* Now, using the knowledge from the last step change the label of the X and Y axes to be more informative, add a title. Save the plot in your forked repository.
+
+
+```{r}
+p <- ggplot(candidate_endorsements, aes(x=reorder(candidate_name, -n_endorsements), y=n_endorsements))+
+  geom_col(fill="#8ebbfd")
+
+
+# Didn't like the way this looked, used minimal theme instead
+# p + theme_dark()
+
+
+p + 
+  labs(x="\nCandidate", y="Number of Endorsements\n", title="Candidate Endorsements") +
+  theme_minimal()
+
+ggsave("CandidateEndorsements.pdf", width = 7, height = 3)
+```
+
+
+
+
+\section* {Text-as-Data with \texttt{tidyverse}}
 
 For this question you will be analyzing Tweets from President Trump for various characteristics. Load in the following packages and data:
 
-```{r eval=FALSE}
+```{r, message=FALSE, output="hide", warning=FALSE}
 # Change eval=FALSE in the code block. Install packages as appropriate.
 library(tidyverse)
 #install.packages('tm')
@@ -101,11 +162,121 @@ trump_tweets_url <- 'https://politicaldatascience.com/PDS/Datasets/trump_tweets.
 tweets <- read_csv(trump_tweets_url)
 ```
 
-\begin{itemize}
-  \item First separate the \texttt{created\_at} variable into two new variables where the date and the time are in separate columns. After you do that, then report the range of dates that is in this dataset.
-  \item Using \texttt{dplyr} subset the data to only include original tweets (remove retweents) and show the text of the President's \textbf{top 5} most popular and most retweeted tweets. (Hint: The \texttt{match} function can help you find the index once you identify the largest values.) 
-  \item Create a \textit{corpus} of the tweet content and put this into the object \texttt{Corpus} using the \texttt{tm} (text mining) package. (Hint: Do the assigned readings.)
-  \item Remove extraneous whitespace, remove numbers and punctuation, convert everything to lower case and remove 'stop words' that have little substantive meaning (the, a, it).
-  \item Now create a \texttt{wordcloud} to visualize the top 50 words the President uses in his tweets. Use only words that occur at least three times. Display the plot with words in random order and use 50 random colors. Save the plot into your forked repository.\item Create a \textit{document term matrix} called \texttt{DTM} that includes the argument \texttt{ control = list(weighting = weightTfIdf)}
-  \item Finally, report the 50 words with the the highest tf.idf scores using a lower frequency bound of .8.
-\end{itemize}
+* First separate the \texttt{created\_at} variable into two new variables where the date and the time are in separate columns. After you do that, then report the range of dates that is in this dataset.
+  
+```{r}
+tweets <- tweets %>% 
+  separate(created_at, c("created_date", "created_time"), sep=" ") %>% 
+  mutate(created_date = as.Date(created_date, format="%m/%d/%Y"))
+
+tweets %>% 
+  summarise(min=min(created_date), max=max(created_date))
+
+```
+  
+  
+* Using \texttt{dplyr} subset the data to only include original tweets (remove retweents) and show the text of the President's \textbf{top 5} most popular and most retweeted tweets. (Hint: The \texttt{match} function can help you find the index once you identify the largest values.) 
+  
+  
+```{r}
+tweets <- tweets %>% 
+  filter(!is_retweet) 
+
+top_fav <- tweets %>% 
+  slice_max(favorite_count, n=5) %>% 
+  select(favorite_count)
+
+
+top_rt <- tweets %>% 
+  slice_max(retweet_count, n=5) %>% 
+  select(retweet_count)  
+
+
+
+ten_tweets <- tweets %>% 
+  filter(retweet_count %in% top_rt$retweet_count | favorite_count %in% top_fav$favorite_count) %>% 
+  select(text)
+
+```
+  
+  
+* Create a \textit{corpus} of the tweet content and put this into the object \texttt{Corpus} using the \texttt{tm} (text mining) package. (Hint: Do the assigned readings.)
+* Remove extraneous whitespace, remove numbers and punctuation, convert everything to lower case and remove 'stop words' that have little substantive meaning (the, a, it).
+  
+```{r}
+# vignette("tm")
+
+# This string wasn't getting caught by tm functions; fix in original dataset first
+tweets$text = gsub("&amp", "", tweets$text)
+
+# A bunch of attempts to get rid of URLs in tweets which end up with the highest tf.idf scores in the DTM
+# Attempts unsuccessful so far
+
+# tweets$text = gsub(regex("(https?(:\\/\\/)?[^\\s]+)."), "", tweets$text)
+tweets$text = gsub(regex("(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?\\/?[^\\s]*"), "", tweets$text)
+
+
+# tweets %>% 
+#   filter(grepl(regex("(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?\\/?[^\\s]*"),text)) %>% 
+#   mutate(new_text = gsub(regex("(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?\\/?[^\\s]*"), "", text)) %>% 
+#   select(text, new_text)
+# 
+# tweets %>% 
+#   filter(grepl(regex("((www\\.)?(https?)(:\\/\\/)?[^\\s]+)."),text)) %>% 
+#   mutate(new_text = gsub(regex("((www\\.)?(https?)(:\\/\\/)?[^\\s]+)."), "", text)) %>% 
+#   select(text, new_text)
+# 
+# 
+# regex("((www\\.)?(https?)(:\\/\\/)?[^\\s]+).")
+
+trump_tweets <- VCorpus(VectorSource(tweets$text))
+inspect(trump_tweets[[1]])
+
+
+
+trump_tweets <- trump_tweets %>% 
+  tm_map(content_transformer(tolower)) %>% 
+  tm_map(stripWhitespace) %>% 
+  tm_map(removeWords, stopwords("english")) %>% 
+  tm_map(removePunctuation) %>% 
+  tm_map(removeNumbers)
+
+
+
+```
+  
+  
+* Now create a \texttt{wordcloud} to visualize the top 50 words the President uses in his tweets. Use only words that occur at least three times. Display the plot with words in random order and use 50 random colors. Save the plot into your forked repository.
+
+  
+```{r}
+set.seed(4444)
+wordcloud(trump_tweets, 
+          min.freq = 3, 
+          max.words = 50, 
+          random.order = TRUE, 
+          random.color = FALSE,
+          colors=sample(colors(), 50))
+```
+  
+* Create a \textit{document term matrix} called \texttt{DTM} that includes the argument \texttt{ control = list(weighting = weightTfIdf)}
+* Finally, report the 50 words with the the highest tf.idf scores using a lower frequency bound of .8.
+  
+```{r}
+
+DTM <- DocumentTermMatrix(trump_tweets, control = list(weighting = weightTfIdf, global=c(0.8,Inf)))
+
+# inspect(removeSparseTerms(DTM, 0.95))
+
+freqT <- findMostFreqTerms(DTM, INDEX = 1:DTM$nrow)
+
+ULfreqT <- unlist(freqT)[unlist(freqT) > 0.8]
+
+
+# See how output is mostly URL remnants, some hashtags too
+sort(ULfreqT, decreasing = TRUE)[1:50]
+
+# as.matrix(removeSparseTerms(DTM, 0.95))
+```
+  
+  
