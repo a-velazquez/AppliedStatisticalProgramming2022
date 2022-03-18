@@ -249,7 +249,7 @@ inspect(trump_tweets[[1]])
   
 ```{r}
 # Set a seed to control randomness of colors.
-set.seed(3333)
+set.seed(333444346)
 
 # Define the filepath to output PDF.
 pdf("trump_wordcloud.pdf")
