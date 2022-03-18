@@ -213,6 +213,7 @@ tweets$text = gsub("&amp", "", tweets$text)
 # Attempts unsuccessful so far
 
 # tweets$text = gsub(regex("(https?(:\\/\\/)?[^\\s]+)."), "", tweets$text)
+
 tweets$text = gsub(regex("(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?\\/?[^\\s]*"), "", tweets$text)
 
 
@@ -250,7 +251,7 @@ trump_tweets <- trump_tweets %>%
 
   
 ```{r}
-set.seed(4444)
+set.seed(1616161)
 wordcloud(trump_tweets, 
           min.freq = 3, 
           max.words = 50, 
@@ -266,17 +267,22 @@ wordcloud(trump_tweets,
 
 DTM <- DocumentTermMatrix(trump_tweets, control = list(weighting = weightTfIdf, global=c(0.8,Inf)))
 
-# inspect(removeSparseTerms(DTM, 0.95))
+inspect(removeSparseTerms(DTM, 0.98))
 
-freqT <- findMostFreqTerms(DTM, INDEX = 1:DTM$nrow)
+term_mat <- as.matrix(removeSparseTerms(DTM, 0.999))
 
-ULfreqT <- unlist(freqT)[unlist(freqT) > 0.8]
+nrow(term_mat)
+ncol(term_mat)
+
+trump_tweets_tfidf <- as.tibble(term_mat) %>% 
+  summarise(across(everything(), max)) %>% 
+  pivot_longer(everything()) %>%
+  rename(term=name, tf_idf=value) %>% 
+  filter(tf_idf > 0.8) %>% 
+  arrange(desc(tf_idf))
 
 
-# See how output is mostly URL remnants, some hashtags too
-sort(ULfreqT, decreasing = TRUE)[1:50]
-
-# as.matrix(removeSparseTerms(DTM, 0.95))
+trump_tweets_tfidf[1:50,]
 ```
   
   
