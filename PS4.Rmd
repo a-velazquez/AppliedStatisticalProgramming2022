@@ -165,10 +165,13 @@ tweets <- read_csv(trump_tweets_url)
 * First separate the \texttt{created\_at} variable into two new variables where the date and the time are in separate columns. After you do that, then report the range of dates that is in this dataset.
   
 ```{r}
+# Use the separate() function to split on the space between date and time.
+# Save created_date as date.
 tweets <- tweets %>% 
   separate(created_at, c("created_date", "created_time"), sep=" ") %>% 
   mutate(created_date = as.Date(created_date, format="%m/%d/%Y"))
 
+# Use summarise() to view date range.
 tweets %>% 
   summarise(min=min(created_date), max=max(created_date))
 
@@ -179,21 +182,25 @@ tweets %>%
   
   
 ```{r}
+
+# Remove retweets.
 tweets <- tweets %>% 
   filter(!is_retweet) 
 
+# Use slice_max() to get a vector of the top 5 favorited numbers
 top_fav <- tweets %>% 
   slice_max(favorite_count, n=5) %>% 
   select(favorite_count)
 
-
+# Use slice_max() to get a vector of the top 5 retweeted numbers
 top_rt <- tweets %>% 
   slice_max(retweet_count, n=5) %>% 
   select(retweet_count)  
 
 
-
-ten_tweets <- tweets %>% 
+# Use the match function to identify rows belonging to a top favorited or top retweeted tweet.
+# Select the text of these tweets.
+tweets %>% 
   filter(retweet_count %in% top_rt$retweet_count | favorite_count %in% top_fav$favorite_count) %>% 
   select(text)
 
@@ -204,12 +211,10 @@ ten_tweets <- tweets %>%
 * Remove extraneous whitespace, remove numbers and punctuation, convert everything to lower case and remove 'stop words' that have little substantive meaning (the, a, it).
   
 ```{r}
-# vignette("tm")
-
 # This string wasn't getting caught by tm functions; fix in original dataset first
 tweets$text = gsub("&amp", "", tweets$text)
 
-
+# This regex is to try to get rid of URLs; it gets most of them but some are still not caught
 tweets$text = gsub(regex("(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?\\/?[^\\s]*"), "", tweets$text)
 
 
@@ -217,6 +222,7 @@ tweets$text = gsub(regex("(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|http
 tweets <- tweets %>%
   filter(text != "")
 
+# This will be the number of "documents" in the corpus below
 nrow(tweets)
 
 # Create corpus, look at one of the tweets
@@ -242,8 +248,14 @@ inspect(trump_tweets[[1]])
 
   
 ```{r}
-set.seed(33333)
+# Set a seed to control randomness of colors.
+set.seed(3333)
+
+# Define the filepath to output PDF.
 pdf("trump_wordcloud.pdf")
+
+# Create wordcloud with desired characteristics.
+# Choose the 50 random colors by sampling built-in R colors()
 wordcloud(trump_tweets, 
           min.freq = 3,
           scale=c(3,.5),
@@ -258,17 +270,28 @@ dev.off()
 * Finally, report the 50 words with the the highest tf.idf scores using a lower frequency bound of .8.
   
 ```{r}
-# Create the DTM - note that there will be empty documents 
+# Create the DTM with tf.idf weights - note that there will be empty documents. 
 DTM <- DocumentTermMatrix(trump_tweets, control = list(weighting = weightTfIdf, global=c(0.8,Inf)))
 
+# Inspect the DTM, note that it is 100% sparse. 
+# Attempting to turn this into a matrix exhausts memory.
+inspect(DTM)
 
-inspect(removeSparseTerms(DTM, 0.98))
+# Reducing sparsity by just a bit makes the DTM a lot more manageable.
+inspect(removeSparseTerms(DTM, 0.999))
 
+# Turn into matrix
 term_mat <- as.matrix(removeSparseTerms(DTM, 0.999))
 
+# This is the number of documents in the corpus.
 nrow(term_mat)
+
+# This is the number of terms.
 ncol(term_mat)
 
+# Get the maximum tf.idf score for each term across all documents.
+# Make a "long" tibble.
+# Filter out low tf.idf scores and arrange from high to low.
 trump_tweets_tfidf <- as_tibble(term_mat) %>% 
   summarise(across(everything(), max)) %>% 
   pivot_longer(everything()) %>%
@@ -276,7 +299,7 @@ trump_tweets_tfidf <- as_tibble(term_mat) %>%
   filter(tf_idf > 0.8) %>% 
   arrange(desc(tf_idf))
 
-
+# Print the entire list.
 print(trump_tweets_tfidf[1:50,], n=50)
 
 
