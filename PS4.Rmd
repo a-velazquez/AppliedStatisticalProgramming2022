@@ -209,32 +209,22 @@ ten_tweets <- tweets %>%
 # This string wasn't getting caught by tm functions; fix in original dataset first
 tweets$text = gsub("&amp", "", tweets$text)
 
-# A bunch of attempts to get rid of URLs in tweets which end up with the highest tf.idf scores in the DTM
-# Attempts unsuccessful so far
-
-# tweets$text = gsub(regex("(https?(:\\/\\/)?[^\\s]+)."), "", tweets$text)
 
 tweets$text = gsub(regex("(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?\\/?[^\\s]*"), "", tweets$text)
 
 
-# tweets %>% 
-#   filter(grepl(regex("(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?\\/?[^\\s]*"),text)) %>% 
-#   mutate(new_text = gsub(regex("(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?\\/?[^\\s]*"), "", text)) %>% 
-#   select(text, new_text)
-# 
-# tweets %>% 
-#   filter(grepl(regex("((www\\.)?(https?)(:\\/\\/)?[^\\s]+)."),text)) %>% 
-#   mutate(new_text = gsub(regex("((www\\.)?(https?)(:\\/\\/)?[^\\s]+)."), "", text)) %>% 
-#   select(text, new_text)
-# 
-# 
-# regex("((www\\.)?(https?)(:\\/\\/)?[^\\s]+).")
+# Delete empty tweets to avoid warnings later
+tweets <- tweets %>%
+  filter(text != "")
 
+nrow(tweets)
+
+# Create corpus, look at one of the tweets
 trump_tweets <- VCorpus(VectorSource(tweets$text))
+
 inspect(trump_tweets[[1]])
 
-
-
+# Clean up the corpus, strip of unnecessary characters
 trump_tweets <- trump_tweets %>% 
   tm_map(content_transformer(tolower)) %>% 
   tm_map(stripWhitespace) %>% 
@@ -242,7 +232,8 @@ trump_tweets <- trump_tweets %>%
   tm_map(removePunctuation) %>% 
   tm_map(removeNumbers)
 
-
+# Now view the same tweet after cleaning
+inspect(trump_tweets[[1]])
 
 ```
   
@@ -251,21 +242,25 @@ trump_tweets <- trump_tweets %>%
 
   
 ```{r}
-set.seed(1616161)
+set.seed(33333)
+pdf("trump_wordcloud.pdf")
 wordcloud(trump_tweets, 
-          min.freq = 3, 
+          min.freq = 3,
+          scale=c(3,.5),
           max.words = 50, 
           random.order = TRUE, 
           random.color = FALSE,
           colors=sample(colors(), 50))
+dev.off()
 ```
   
 * Create a \textit{document term matrix} called \texttt{DTM} that includes the argument \texttt{ control = list(weighting = weightTfIdf)}
 * Finally, report the 50 words with the the highest tf.idf scores using a lower frequency bound of .8.
   
 ```{r}
-
+# Create the DTM - note that there will be empty documents 
 DTM <- DocumentTermMatrix(trump_tweets, control = list(weighting = weightTfIdf, global=c(0.8,Inf)))
+
 
 inspect(removeSparseTerms(DTM, 0.98))
 
@@ -274,7 +269,7 @@ term_mat <- as.matrix(removeSparseTerms(DTM, 0.999))
 nrow(term_mat)
 ncol(term_mat)
 
-trump_tweets_tfidf <- as.tibble(term_mat) %>% 
+trump_tweets_tfidf <- as_tibble(term_mat) %>% 
   summarise(across(everything(), max)) %>% 
   pivot_longer(everything()) %>%
   rename(term=name, tf_idf=value) %>% 
@@ -282,7 +277,10 @@ trump_tweets_tfidf <- as.tibble(term_mat) %>%
   arrange(desc(tf_idf))
 
 
-trump_tweets_tfidf[1:50,]
+print(trump_tweets_tfidf[1:50,], n=50)
+
+
+
 ```
   
   
