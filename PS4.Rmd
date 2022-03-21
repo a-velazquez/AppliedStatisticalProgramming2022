@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 \begin{center}
-{\Large{\textbf{Problem Set 3}}} \\
+{\Large{\textbf{Problem Set 4}}} \\
 \vspace{4 bp}
 Due Wednesday, March 16, 10:00 AM (Before Class) \\
 \end{center}
