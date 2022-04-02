@@ -38,5 +38,10 @@ setMethod("initialize", "Trapezoid",
 #' @rdname Trapezoid
 
 
-
+#' @export
+setMethod(f = "print",
+          signature(x = "Trapezoid"),
+          definition = function(x){
+            print(x@result)
+          })
 

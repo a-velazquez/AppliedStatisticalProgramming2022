@@ -37,3 +37,9 @@ setMethod("initialize", "Simpson",
 
 #' @rdname Simpson
 
+#' @export
+setMethod(f = "print",
+          signature(x = "Simpson"),
+          definition = function(x){
+            print(x@result)
+          })
