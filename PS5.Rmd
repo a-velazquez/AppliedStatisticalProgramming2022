@@ -1,6 +1,7 @@
 ---
 title: "Applied Statistical Programming - Spring 2022"
 output: pdf_document
+author: Alma Velazquez
 ---
 
 ```{r setup, include=FALSE}
@@ -116,8 +117,25 @@ If we imagine carrying on that calculation many times between different points a
 \item The absolute error of the estimate
 \end{enumerate}
 \end{enumerate}
+\end{enumerate}
 
+```{r}
+## Load libraries and set working directory
+library(devtools)
+library(roxygen2)
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+```
 
+```{r}
+source("Trapezoid-class.R")
+source("Simpson-class.R")
+source("integrateIt.R")
+
+text_x <- seq(from = 1, to = 3, by = 0.001)
+testIntegral_S <- integrateIt(text_x, function(x){x^2}, c(1, 3),"Simpson")
+testIntegral_T <- integrateIt(text_x, function(x){x^2}, c(1, 3),"Trapezoid")
+
+```
 
 \end{enumerate}
 
