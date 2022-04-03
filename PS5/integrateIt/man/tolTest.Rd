@@ -8,13 +8,13 @@
 tolTest(fx, start_n, tol, interval, rule)
 }
 \arguments{
-\item{fx}{A function defined over \link{a,b}.}
+\item{fx}{A function defined over \code{[a,b]}.}
 
-\item{start_n}{The number of desired subintervals over \link{a,b} used to define x values.}
+\item{start_n}{The number of desired subintervals over \code{[a,b]} used to define x values.}
 
 \item{tol}{The tolerated absolute margin of error.}
 
-\item{interval}{A vector containing the lower and upper bounds of integration \link{a,b}.}
+\item{interval}{A vector containing the lower and upper bounds of integration \code{[a,b]=c(a,b)}.}
 
 \item{rule}{\code{'Simpson'} or \code{'Trapezoid'} method of numerical integration.}
 }
@@ -22,9 +22,9 @@ tolTest(fx, start_n, tol, interval, rule)
 A list object containing all inputs and the final n and associated absolute error
 \item{function_input}{The original function}
 \item{start_n}{The user-defined tolerated absolute margin of error}
-\item{desired_tol}{The user-defined function values over \link{a,b}}
+\item{desired_tol}{The user-defined function values over \code{[a,b]}}
 \item{integration_method}{The numerical integration method used}
-\item{interval}{The original interval \link{a,b}}
+\item{interval}{The original interval \code{[a,b]}}
 \item{final_n}{Final numer of subintervals that yields a value within the tolerated error margin}
 \item{absolute_error}{The final absolute error of the estimare}
 }
@@ -35,7 +35,9 @@ Finds appropriate n for integration accuracy.
 
 test_fx <- function(x){x^2}
 tolTest(text_fx, 20, tol=0.001, c(1,3), rule="Trapezoid")
-
+}
+\seealso{
+integrateIt, Trapezoid-class, Simpson-class
 }
 \author{
 Alma Velazquez

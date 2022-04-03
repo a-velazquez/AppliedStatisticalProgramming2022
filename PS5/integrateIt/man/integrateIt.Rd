@@ -2,25 +2,25 @@
 % Please edit documentation in R/integrateIt.R
 \name{integrateIt}
 \alias{integrateIt}
-\alias{IntegrateIt,ANY-method}
+\alias{integrateIt,ANY-method}
 \title{Integrating values}
 \usage{
 integrateIt(fx, n, interval, rule)
 }
 \arguments{
-\item{fx}{A function defined over \link{a,b}.}
+\item{fx}{A function defined over \code{[a,b]}.}
 
-\item{n}{The number of desired subintervals over \link{a,b} used to define x values.}
+\item{n}{The number of desired subintervals over \code{[a,b]} used to define x values.}
 
-\item{interval}{The lower and upper bounds of the interval \link{a,b}.}
+\item{interval}{A vector containing the lower and upper bounds of integration \code{[a,b]=c(a,b)}.}
 
 \item{rule}{\code{'Simpson'} or \code{'Trapezoid'} method of numerical integration.}
 }
 \value{
 An object of class \code{'Simpson'} or \code{'Trapezoid'} containing
 \item{result}{The approximated numerical integral}
-\item{x}{A subset of the original vector of inputs over \link{a,b}}
-\item{y}{The evaluated function values over \link{a,b}}
+\item{x}{A subset of the original vector of inputs over \code{[a,b]}}
+\item{y}{The evaluated function values over \code{[a,b]}}
 }
 \description{
 Integrates function over interval using numerical approximation methods.
@@ -32,7 +32,9 @@ Approximation accuracy increases with size of n.
 
 test_fx <- function(x){x^2}
 integrateIt(text_fx, 2000, c(1,3), rule="Trapezoid")
-
+}
+\seealso{
+tolTest, Trapezoid-class, Simpson-class
 }
 \author{
 Alma Velazquez
