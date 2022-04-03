@@ -16,7 +16,7 @@
 #' @examples
 #' 
 #' test_fx <- function(x){x^2}
-#' IntegrateIt(text_fx, 2000, c(1,3), rule="Trapezoid")
+#' integrateIt(text_fx, 2000, c(1,3), rule="Trapezoid")
 #' 
 #' @rdname integrateIt
 #' @aliases IntegrateIt,ANY-method
