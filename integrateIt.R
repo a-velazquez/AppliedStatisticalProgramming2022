@@ -2,8 +2,8 @@
 #'
 #' Integrates function over interval using numerical approximation methods.
 #'
-#' @param x A vector of partition values containing the interval [a,b].
-#' @param fx A function defined over all values of \code{x}.
+#' @param fx A function defined over [a,b].
+#' @param n The number of desired partitions over the interval [a,b] used to define x values.
 #' @param interval The lower and upper bounds of the interval [a,b].
 #' @param rule \code{'Simpson'} or \code{'Trapezoid'} method of numerical integration.
 #'
@@ -12,12 +12,11 @@
 #'  \item{x}{A subset of the original vector of inputs over [a,b]} 
 #'  \item{y}{The evaluated function values over [a,b]}
 #' @author Alma Velazquez
-#' @note Approximation accuracy increases with length of interval.
+#' @note Approximation accuracy increases with size of n.
 #' @examples
 #' 
-#' text_x <- seq(from = 1, to = 3, by = 0.001)
 #' test_fx <- function(x){x^2}
-#' IntegrateIt(text_x, text_fx, c(1,3), rule="Trapezoid")
+#' IntegrateIt(text_fx, 2000, c(1,3), rule="Trapezoid")
 #' 
 #' @rdname integrateIt
 #' @aliases IntegrateIt,ANY-method
@@ -29,13 +28,13 @@ setGeneric(name="integrateIt",
 )
 #' @export
 setMethod(f="integrateIt",
-          definition=function(x, fx, interval, rule){
+          definition=function(fx, n, interval, rule){
             
             a <- interval[1]
             
             b <- interval[2]
             
-            n <- length(x[a <= x & x <= b])
+            x <- seq(from=a, to=b, by=(b-a)/n)
             
             x_vals <- x[a < x & x < b]
             y_vals <- unlist(lapply(x_vals, fx))
