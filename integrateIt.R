@@ -3,7 +3,7 @@
 #' Integrates function over interval using numerical approximation methods.
 #'
 #' @param fx A function defined over [a,b].
-#' @param n The number of desired partitions over the interval [a,b] used to define x values.
+#' @param n The number of desired subintervals over [a,b] used to define x values.
 #' @param interval The lower and upper bounds of the interval [a,b].
 #' @param rule \code{'Simpson'} or \code{'Trapezoid'} method of numerical integration.
 #'
@@ -23,7 +23,7 @@
 #' 
 #' @export
 setGeneric(name="integrateIt",
-           def=function(x, fx, interval, rule)
+           def=function(fx, n, interval, rule)
            {standardGeneric("integrateIt")}
 )
 #' @export
