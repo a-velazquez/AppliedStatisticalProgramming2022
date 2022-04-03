@@ -27,10 +27,40 @@ setClass(Class="Simpson",
          )
 )
 
+setValidity("Simpson", function(object){
+  
+  test1 <- any(is.infinite(object@x))
+  test2 <- any(is.infinite(object@y))
+  
+  test3 <- any(is.na(object@x))
+  test4 <- any(is.na(object@y))
+  
+  a <- object@x[1]
+  b <- object@x[length(object@x)]
+  
+  f_a <- object@y[1]
+  f_b <- object@y[length(object@y)]
+  
+  n <- length(object@x)
+  
+  x_vals <- object@x[a < object@x & object@x < b]
+  y_vals <- object@y[f_a < object@y & object@y < f_b]
+  
+  h <- (b-a)/n
+  
+  correct_result <- (h/3) * (sum(4*y_vals[c(TRUE,FALSE)]) + sum(2*y_vals[c(FALSE,TRUE)]) + f_a + f_b)
+  
+  test5 <- correct_result == object@result
+  
+  if(any(test1,test2,test3,test4,test5)){return("@result is not a valid value")}
+}
+)
+
 #' @export
 setMethod("initialize", "Simpson", 
           function(.Object, ...){
-            value=callNextMethod()
+            value = callNextMethod()
+            validObject(value)
             return(value)
           }
 ) 
@@ -43,3 +73,5 @@ setMethod(f = "print",
           definition = function(x){
             print(x@result)
           })
+
+
