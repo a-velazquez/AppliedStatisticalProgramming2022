@@ -3,21 +3,21 @@
 \docType{class}
 \name{Simpson-class}
 \alias{Simpson-class}
-\alias{initialize,IntegrateIt-method}
+\alias{initialize,integrateIt-method}
 \alias{print,Simpson-method}
 \title{An integrated value object using Simpson's Rule}
 \usage{
 \S4method{print}{Simpson}(x)
 }
 \description{
-Objects of class \code{Simpson} are created by the \code{IntegrateIt} function
+Objects of class \code{Simpson} are created by the \code{integrateIt} function
 }
 \details{
 An object of the class `Simpson' has the following slots:
 \itemize{
-\item \code{result} The numerical approximation of an integral F(x) over some interval (a,b) according to Simpson's Rule
-\item \code{x} A vector of partition values over the interval \link{a,b}
-\item \code{y} The function f evaluated over \link{a,b}
+\item \code{result} The numerical approximation of an integral F(x) over some interval \code{[a,b]} according to Simpson's Rule
+\item \code{x} A vector of partition values over the interval \code{[a,b]}
+\item \code{y} The function f evaluated over \code{[a,b]}
 }
 }
 \author{

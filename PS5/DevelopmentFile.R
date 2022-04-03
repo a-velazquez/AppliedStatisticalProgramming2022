@@ -29,6 +29,8 @@ devtools::install(current.code)
 
 # Call help page on our method
 ?integrateIt
+?`Simpson-class`
+?tolTest
 
 # This builds the package
 # devtools::build("integrateIt")
