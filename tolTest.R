@@ -45,7 +45,7 @@ setMethod(f="tolTest",
             stopper <- FALSE
             
             while(!stopper){
-              guess <- print(integrateIt(fx, test_n, interval, rule))
+              guess <- integrateIt(fx, test_n, interval, rule)@result
               abs_err <- abs(correct-guess)
               if(abs_err<=tol){
                 stopper <- TRUE
