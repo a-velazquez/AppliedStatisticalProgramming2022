@@ -14,3 +14,14 @@ test_fun1 <- function(y){
 }
 
 test_fun1(vec)
+
+
+test_fun2 <- function(y, lambda){
+  n <- length(y)
+  ll_result <- (-n * lambda) - sum(log(gmp::factorialZ(y))) + log(lambda) * sum(y)
+  return(ll_result)
+}
+
+test_fun2(vec, test_fun1(vec))
+
+
