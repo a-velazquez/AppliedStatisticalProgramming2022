@@ -1,0 +1,16 @@
+Package: easyPois
+Title: Estimate a Poisson Model
+Version: 0.0.0.9000
+Authors@R: 
+    person("Alma", "Velazquez", , "a.m.velazquez@wustl.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Fit one parameter likelihood function for observed data assumed to be distributed according to a Poisson distribution. Associated log likelihood and standard errors are also returned. Plot lambdas against their log likelihoods.
+Imports:
+    ggplot2,
+    gmp,
+    methods,
+    stats
+License: `use_mit_license()`
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
