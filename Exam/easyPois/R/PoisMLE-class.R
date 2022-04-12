@@ -34,7 +34,7 @@ setClass(Class="PoisMLE",
 )
 
 setValidity("PoisMLE", function(object){
-  
+  # Use internal functions to test
   # Test that input data is appropriate
   stopifnot("All observations must be non-negative" = all(object@y>=0))
   stopifnot("All observations must be integers" = all(as.integer(object@y)==object@y))
