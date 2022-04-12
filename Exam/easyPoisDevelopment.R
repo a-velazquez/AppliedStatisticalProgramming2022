@@ -34,3 +34,5 @@ plot(new_test)
 # This installs the package
 devtools::install(current.code)
 
+# This builds the package
+devtools::build("easyPois")
