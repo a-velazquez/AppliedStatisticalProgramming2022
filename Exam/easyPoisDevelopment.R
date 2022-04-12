@@ -13,6 +13,8 @@ load_all(current.code)
 document(current.code)
 
 # Test both types of SE methods
-estimatePois(c(50, 70, 80, 99, 82, 43), "bootstrap", 223)
 estimatePois(c(50, 70, 80, 99, 82, 43), "basic", 223)
+new_test <- estimatePois(c(50, 70, 80, 99, 82, 43), "bootstrap", 223)
+
+testPOIS <- estimatePois(rpois(4, 2.5), "bootstrap", B=7000)
 
