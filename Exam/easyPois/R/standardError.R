@@ -34,10 +34,11 @@ standardError <- function(y, SEtype, B=10){
   }
   else if(SEtype=="bootstrap"){
     
-    for(i in 1:B){
-      sample_col <- sample(y, n, replace = TRUE)
-      all_samples[,i] <- sample_col
-    }
+    all_samples <- matrix(unlist(lapply(c(1:B), 
+                                        function(x){sample(y, n, replace = TRUE)})), 
+                          ncol = B, nrow = n,
+                          byrow = FALSE)
+    
     
     
     sample_mles <- apply(all_samples, 2, mle)
