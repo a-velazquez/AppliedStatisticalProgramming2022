@@ -12,9 +12,23 @@ current.code <- as.package("easyPois")
 load_all(current.code)
 document(current.code)
 
-# Test both types of SE methods
+# Check for errors
+devtools::check(current.code)
+
+# Test both types of SE methods, store one
 estimatePois(c(50, 70, 80, 99, 82, 43), "basic", 223)
 new_test <- estimatePois(c(50, 70, 80, 99, 82, 43), "bootstrap", 223)
 
-testPOIS <- estimatePois(rpois(4, 2.5), "bootstrap", B=7000)
+# Create another test using rpois
+testPOIS <- estimatePois(rpois(40, 2.5), "bootstrap", B=70000)
+
+# Plot this one 
+plot(testPOIS)
+
+# Plot the other one
+plot(new_test)
+
+
+# This installs the package
+devtools::install(current.code)
 

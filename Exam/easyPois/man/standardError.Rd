@@ -31,7 +31,7 @@ The user specifies which method to use for this calculation when initializing a 
 resamplings of \code{y}.
 }
 \examples{
-\donttest{y_vec <- c(1,2,3,4)
+\dontrun{y_vec <- c(1,2,3,4)
 standardError(y_vec, "bootstrap", B=10)}
 }
 \seealso{

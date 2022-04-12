@@ -23,7 +23,7 @@ in the associated Poisson distribution. The calculation is performed according t
 The computed value is ultimately returned when initializing an object of class \code{PoisMLE}.
 }
 \examples{
-\donttest{y_vec <- c(1,2,3,4)
+\dontrun{y_vec <- c(1,2,3,4)
 logLik(y_vec, mle(y_vec))}
 }
 \seealso{

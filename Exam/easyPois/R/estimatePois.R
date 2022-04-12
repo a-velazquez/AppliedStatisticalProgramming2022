@@ -33,6 +33,9 @@ setGeneric(name="estimatePois",
 #' @export
 setMethod(f="estimatePois",
           definition=function(y, SEtype, B=10){
+            # Initialize object of class "PoisMLE".
+            # Slots are filled by outputs of
+            # internal functions.
             return(new("PoisMLE", 
                        y = y, 
                        MLE = mle(y), 

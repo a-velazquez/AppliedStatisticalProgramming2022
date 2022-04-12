@@ -11,7 +11,7 @@
 #'  \item{MLE}{The maximum likelihood estimator for \eqn{\lambda}}
 #' @author Alma Velazquez
 #' @examples
-#' \donttest{y_vec <- c(1,2,3,4)
+#' \dontrun{y_vec <- c(1,2,3,4)
 #' mle(y_vec)}
 #' @seealso standardError, logLik, PoisMLE-class
 #' @rdname mle
@@ -20,6 +20,7 @@
 #' @keywords internal
 mle <- function(y){
   n <- length(y)
+  # Apply formula for MLE of lambda parameter.
   mle_result <- sum(y, na.rm = TRUE) / n
   return(mle_result)
 }

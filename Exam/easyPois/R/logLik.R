@@ -13,7 +13,7 @@
 #'  \item{LL}{The log likelihood value}
 #' @author Alma Velazquez
 #' @examples
-#' \donttest{y_vec <- c(1,2,3,4)
+#' \dontrun{y_vec <- c(1,2,3,4)
 #' logLik(y_vec, mle(y_vec))}
 #' @seealso mle, PoisMLE-class
 #' @rdname logLik
@@ -22,6 +22,7 @@
 #' @keywords internal
 logLik <- function(y, lambda){
   n <- length(y)
+  # Using n and lambda, depend on gmp to apply this formula and avoid floating point errors.
   ll_result <- (-n * lambda) - sum(log(gmp::factorialZ(y))) + log(lambda) * sum(y)
   return(ll_result)
 }

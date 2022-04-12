@@ -20,29 +20,34 @@
 #'  \item{SE}{The standard error}
 #' @author Alma Velazquez
 #' @examples
-#' \donttest{y_vec <- c(1,2,3,4)
+#' \dontrun{y_vec <- c(1,2,3,4)
 #' standardError(y_vec, "bootstrap", B=10)}
 #' @seealso mle, PoisMLE-class
 #' @rdname standardError
 #' @aliases standardError
 #' 
 #' @keywords internal
-standardError <- function(y, SEtype, B=10){
+standardError <- function(y, SEtype, B=10){ # B has a default of 10
   n <- length(y)
+  # When SEtype is basic...
   if(SEtype=="basic"){
+    # Define the result as this.
     se_result <- sqrt(mle(y)/n)
   }
+  # Otherwise, 
   else if(SEtype=="bootstrap"){
-    
+    # For the indices from 1 to B, randomly sample n
+    # from observed data. Store these in a matrix with B columns and n rows.
     all_samples <- matrix(unlist(lapply(c(1:B), 
                                         function(x){sample(y, n, replace = TRUE)})), 
                           ncol = B, nrow = n,
                           byrow = FALSE)
     
     
-    
+    # Apply mle() to each column of the matrix..
     sample_mles <- apply(all_samples, 2, mle)
-    
+    # Take the standard deviation of the sample,
+    # save to result.
     se_result <- sd(sample_mles)
   }
   

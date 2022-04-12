@@ -20,7 +20,7 @@ the \eqn{\lambda} parameter in a Poisson distribution, such that
 The estimator is then used and ultimately returned when initializing an object of class \code{PoisMLE}.
 }
 \examples{
-\donttest{y_vec <- c(1,2,3,4)
+\dontrun{y_vec <- c(1,2,3,4)
 mle(y_vec)}
 }
 \seealso{
