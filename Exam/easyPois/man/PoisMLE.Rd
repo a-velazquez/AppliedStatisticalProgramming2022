@@ -3,19 +3,26 @@
 \docType{class}
 \name{PoisMLE-class}
 \alias{PoisMLE-class}
-\alias{initialize,estimatePois-method}
+\alias{estimatePois-method}
+\alias{initialize,PoisMLE-method}
+\alias{plot,PoisMLE-method}
 \title{A fitted MLE Poisson model}
+\usage{
+\S4method{initialize}{PoisMLE}(.Object, ...)
+
+\S4method{plot}{PoisMLE}(x)
+}
 \description{
 Objects of class \code{PoisMLE} are created by the \code{estimatePois} function
 }
 \details{
 An object of the class `PoisMLE' has the following slots:
 \itemize{
-\item \code{y} Original vector of non-negative integer observations.
-\item \code{MLE} The maximum likelihood estimator for given observations.
-\item \code{LL} The log likelihood calculated from the observed data using the MLE estimator.
-\item \code{SE} The standard error for the MLE.
-\item \code{SEtype} The method used to calculate the standard error.
+\item \code{y } The original vector of non-negative integer observations.
+\item \code{MLE } The maximum likelihood estimator for given observations.
+\item \code{LL } The log likelihood calculated from the observed data using the MLE estimator.
+\item \code{SE } The standard error for the MLE.
+\item \code{SEtype } The method used to calculate the standard error.
 }
 }
 \author{

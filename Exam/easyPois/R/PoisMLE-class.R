@@ -5,15 +5,15 @@
 #' 
 #' An object of the class `PoisMLE' has the following slots:
 #' \itemize{
-#' \item \code{y} Original vector of non-negative integer observations.
-#' \item \code{MLE} The maximum likelihood estimator for given observations.
-#' \item \code{LL} The log likelihood calculated from the observed data using the MLE estimator.
-#' \item \code{SE} The standard error for the MLE.
-#' \item \code{SEtype} The method used to calculate the standard error.
+#' \item \code{y } The original vector of non-negative integer observations.
+#' \item \code{MLE } The maximum likelihood estimator for given observations.
+#' \item \code{LL } The log likelihood calculated from the observed data using the MLE estimator.
+#' \item \code{SE } The standard error for the MLE.
+#' \item \code{SEtype } The method used to calculate the standard error.
 #' }
 #'
 #' @author Alma Velazquez: \email{a.m.velazquez@@wustl.edu}
-#' @aliases PoisMLE-class initialize,estimatePois-method 
+#' @aliases estimatePois-method 
 #' @rdname PoisMLE
 #' @export
 setClass(Class="PoisMLE", 
@@ -56,18 +56,19 @@ setValidity("PoisMLE", function(object){
 
 )
 
-
+#' @rdname PoisMLE
 #' @export
 setMethod("initialize", "PoisMLE", 
           function(.Object, ...){
-            value = callNextMethod()
+            value = methods::callNextMethod()
             # Call validator
-            validObject(value)
+            methods::validObject(value)
             return(value)
           }
 ) 
 
 
+#' @rdname PoisMLE
 #' @export
 setMethod(f = "plot",
           # Define signature and definition in terms of x;

@@ -12,8 +12,10 @@ current.code <- as.package("easyPois")
 load_all(current.code)
 document(current.code)
 
+
 # Check for errors
 devtools::check(current.code)
+
 
 # Test both types of SE methods, store one
 estimatePois(c(50, 70, 80, 99, 82, 43), "basic", 223)

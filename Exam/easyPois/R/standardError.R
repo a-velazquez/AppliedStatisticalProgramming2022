@@ -48,7 +48,7 @@ standardError <- function(y, SEtype, B=10){ # B has a default of 10
     sample_mles <- apply(all_samples, 2, mle)
     # Take the standard deviation of the sample,
     # save to result.
-    se_result <- sd(sample_mles)
+    se_result <- stats::sd(sample_mles)
   }
   
   return(se_result)
