@@ -33,12 +33,35 @@ setClass(Class="PoisMLE",
          )
 )
 
+setValidity("PoisMLE", function(object){
+  
+  # Test that input data is appropriate
+  stopifnot("All observations must be non-negative" = all(object@y>=0))
+  stopifnot("All observations must be integers" = all(as.integer(object@y)==object@y))
+  
+  # Test MLE
+  stopifnot("Invalid MLE" = mle(object@y)==object@MLE)
+  
+  # Test LL
+  stopifnot("Invalid LL" = logLik(object@y, object@MLE)==object@LL)
+  
+  # Note: SE cannot be validated because B is not stored in the object.
+  
+  # Test SEtype
+  stopifnot("Invalid SEtype" = object@SEtype %in% c("basic", "bootstrap"))
+  
+}
+
+)
+
+
+
 #' @export
 setMethod("initialize", "PoisMLE", 
           function(.Object, ...){
             value = callNextMethod()
             # Call validator
-            # validObject(value)
+            validObject(value)
             return(value)
           }
 ) 
